@@ -1,0 +1,80 @@
+name: "Set up test db"
+description: "Set up test db"
+inputs:
+  db_user:
+    description: DB user
+    required: false
+    default: postgres
+  db_password:
+    description: DB password
+    required: false
+    default: postgres
+  db_name:
+    description: DB user
+    required: false
+    default: postgres_test
+  db_port:
+    description: DB port
+    required: false
+    default: "5432"
+  db_extensions:
+    description: DB extensions list separated by a space
+    required: false
+    default: pg_stat_statements pgcrypto
+  db_schemas:
+    description: DB schemas list to create separated by a space
+    required: false
+    default: "public"
+  db_migrations_path:
+    description: DB migrations path
+    required: false
+    default: db/migrations
+  db_migrations_config_path:
+    description: DB migrations config path
+    required: false
+    default: db/test/conf/flyway.conf
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Postgres database
+      uses: Daniel-Marynicz/postgresql-action@master
+      with:
+        postgres_image_tag: 13.10
+        app_user: "${{ inputs.db_user }}"
+        app_user_password: "${{ inputs.db_password }}"
+        app_db: "${{ inputs.db_name }}"
+        postgres_extensions: "${{ inputs.db_extensions }}"
+
+    - name: Install psql
+      shell: bash
+      id: install-psql
+      run: |
+        sudo apt-get update
+        sudo apt-get install --yes --no-install-recommends postgresql-client
+
+    - name: Create schema
+      shell: bash
+      id: create-schemas
+      if: inputs.db_schemas != ''
+      run: |
+        IFS=' ' read -r -a schemas <<< "${{ inputs.db_schemas }}"
+        connection_string="postgres://${{ inputs.db_user }}:${{ inputs.db_password }}@localhost:${{ inputs.db_port }}/${{ inputs.db_name }}"
+        do
+          psql -d $connection_string -c "CREATE SCHEMA IF NOT EXISTS $schema;"
+        done
+
+    - name: Install flyway
+      shell: bash
+      id: install-flyway
+      run: wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/10.7.2/flyway-commandline-10.7.2-linux-x64.tar.gz | tar xvz && sudo ln -s `pwd`/flyway-10.7.2/flyway /usr/local/bin
+
+    - name: Make migrations
+      shell: bash
+      id: make-migrations
+      run: |
+        flyway migrate -url=jdbc:postgresql://localhost:${{ inputs.db_port }}/${{ inputs.db_name }} \
+          -user=${{ inputs.db_user }} \
+          -password=${{ inputs.db_password }} \
+          -locations=${{ inputs.db_migrations_path }} \
+          -configFiles=${{ inputs.db_migrations_config_path }}
