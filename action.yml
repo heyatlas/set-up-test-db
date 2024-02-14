@@ -24,7 +24,6 @@ inputs:
   db_schemas:
     description: DB schemas list to create separated by a space
     required: false
-    default: "public"
   db_migrations_path:
     description: DB migrations path
     required: false
