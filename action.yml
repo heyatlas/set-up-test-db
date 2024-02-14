@@ -4,11 +4,11 @@ inputs:
   db_user:
     description: DB user
     required: false
-    default: postgres
+    default: admin
   db_password:
     description: DB password
     required: false
-    default: postgres
+    default: admin
   db_name:
     description: DB user
     required: false
@@ -59,7 +59,7 @@ runs:
       run: |
         IFS=' ' read -r -a schemas <<< "${{ inputs.db_schemas }}"
         connection_string="postgres://${{ inputs.db_user }}:${{ inputs.db_password }}@localhost:${{ inputs.db_port }}/${{ inputs.db_name }}"
-        do
+        do for schema in "${schemas[@]}"
           psql -d $connection_string -c "CREATE SCHEMA IF NOT EXISTS $schema;"
         done
 
