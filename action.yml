@@ -4,11 +4,11 @@ inputs:
   db_user:
     description: DB user
     required: false
-    default: admin
+    default: postgres
   db_password:
     description: DB password
     required: false
-    default: admin
+    default: postgres
   db_name:
     description: DB user
     required: false
@@ -40,10 +40,13 @@ runs:
       uses: Daniel-Marynicz/postgresql-action@master
       with:
         postgres_image_tag: 13.10
-        app_user: "${{ inputs.db_user }}"
-        app_user_password: "${{ inputs.db_password }}"
-        app_db: "${{ inputs.db_name }}"
+        postgres_user: "${{ inputs.db_user }}"
+        postgres_password: "${{ inputs.db_password }}"
+        postgres_db: "${{ inputs.db_name }}"
         postgres_extensions: "${{ inputs.db_extensions }}"
+        # app_user: "${{ inputs.db_user }}"
+        # app_user_password: "${{ inputs.db_password }}"
+        # app_db: "${{ inputs.db_name }}"
 
     - name: Install psql
       shell: bash
