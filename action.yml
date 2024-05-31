@@ -85,7 +85,7 @@ runs:
       uses: actions/checkout@v3
       if: inputs.migrate_from_be_clientes_ar == 'true'
       with:
-        repository: be-clientes-ar
+        repository: "heyatlas/be-clientes-ar"
         ref: "master"
         token: ${{ inputs.github_token }}
         path: be-clientes-ar
