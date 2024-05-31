@@ -86,6 +86,7 @@ runs:
       if: inputs.migrate_from_be_clientes_ar == 'true'
       with:
         repository: "heyatlas/be-clientes-ar"
+        ref: "master"
         token: ${{ inputs.github_token }}
         path: be-clientes-ar
 
