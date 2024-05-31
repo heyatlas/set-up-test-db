@@ -36,6 +36,9 @@ inputs:
     description: Migrate from be-clientes-ar
     required: false
     default: "false"
+  github_token:
+    description: GitHub token
+    required: false
 
 runs:
   using: "composite"
@@ -84,7 +87,7 @@ runs:
       with:
         repository: be-clientes-ar
         ref: "master"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.github_token }}
         path: be-clientes-ar
 
     - name: Make migrations
