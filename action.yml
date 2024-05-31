@@ -90,7 +90,18 @@ runs:
         token: ${{ inputs.github_token }}
         path: be-clientes-ar
 
-    - name: Make migrations
+    - name: Run migrations from be-clientes-ar
+      shell: bash
+      id: run-migrations
+      if: inputs.migrate_from_be_clientes_ar == 'true'
+      run: |
+        flyway migrate -url=jdbc:postgresql://localhost:${{ inputs.db_port }}/${{ inputs.db_name }} \
+          -user=${{ inputs.db_user }} \
+          -password=${{ inputs.db_password }} \
+          -locations=be-clientes-ar/${{ inputs.db_migrations_path }} \
+          -configFiles=be-clientes-ar/${{ inputs.db_migrations_config_path }}
+
+    - name: Make local migrations
       shell: bash
       id: make-migrations
       run: |
