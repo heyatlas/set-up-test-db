@@ -82,11 +82,10 @@ runs:
       run: wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/10.7.2/flyway-commandline-10.7.2-linux-x64.tar.gz | tar xvz && sudo ln -s `pwd`/flyway-10.7.2/flyway /usr/local/bin
 
     - name: Copy migrations from be-clientes-ar
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       if: inputs.migrate_from_be_clientes_ar == 'true'
       with:
         repository: "heyatlas/be-clientes-ar"
-        ref: "master"
         token: ${{ inputs.github_token }}
         path: be-clientes-ar
 
