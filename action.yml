@@ -32,6 +32,10 @@ inputs:
     description: DB migrations config path
     required: false
     default: db/test/conf/flyway.conf
+  migrate_from_be_clientes_ar:
+    description: Migrate from be-clientes-ar
+    required: false
+    default: "false"
 
 runs:
   using: "composite"
@@ -73,6 +77,15 @@ runs:
       shell: bash
       id: install-flyway
       run: wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/10.7.2/flyway-commandline-10.7.2-linux-x64.tar.gz | tar xvz && sudo ln -s `pwd`/flyway-10.7.2/flyway /usr/local/bin
+
+    - name: Copy migrations from be-clientes-ar
+      uses: actions/checkout@v3
+      if: inputs.migrate_from_be_clientes_ar == 'true'
+      with:
+        repository: be-clientes-ar
+        ref: "master"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        path: be-clientes-ar
 
     - name: Make migrations
       shell: bash
