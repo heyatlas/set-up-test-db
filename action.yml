@@ -85,10 +85,10 @@ runs:
       uses: actions/checkout@v4
       if: inputs.migrate_from_be_clientes_ar == 'true'
       with:
-        repository: "heyatlas/be-clientes-ar"
+        repository: "heyatlas/api-graphql"
         ref: "master"
         token: ${{ inputs.github_token }}
-        path: be-clientes-ar
+        path: api-graphql
 
     - name: Make local migrations
       shell: bash
