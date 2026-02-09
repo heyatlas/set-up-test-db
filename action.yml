@@ -81,14 +81,14 @@ runs:
       id: install-flyway
       run: wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/10.7.2/flyway-commandline-10.7.2-linux-x64.tar.gz | tar xvz && sudo ln -s `pwd`/flyway-10.7.2/flyway /usr/local/bin
 
-    - name: Copy migrations from be-clientes-ar
+    - name: Copy migrations from api
       uses: actions/checkout@v4
       if: inputs.migrate_from_be_clientes_ar == 'true'
       with:
-        repository: "heyatlas/api-graphql"
+        repository: "heyatlas/api"
         ref: "master"
         token: ${{ inputs.github_token }}
-        path: api-graphql
+        path: api
 
     - name: Make local migrations
       shell: bash
