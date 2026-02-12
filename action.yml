@@ -44,7 +44,7 @@ runs:
   using: "composite"
   steps:
     - name: Setup redis
-      uses: supercharge/redis-github-action@1.7.0
+      uses: supercharge/redis-github-action@1.8.1
       with:
         redis-version: 7
         redis-password: "admin"
