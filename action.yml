@@ -36,6 +36,9 @@ inputs:
     description: Migrate from be-clientes-ar
     required: false
     default: "false"
+  migrations_branch:
+    description: Branch to use for running migrations
+    required: false
   github_token:
     description: GitHub token
     required: false
@@ -86,7 +89,7 @@ runs:
       if: inputs.migrate_from_be_clientes_ar == 'true'
       with:
         repository: "heyatlas/api"
-        ref: "master"
+        ref: ${{ inputs.migrations_branch }}
         token: ${{ inputs.github_token }}
         path: api
 
